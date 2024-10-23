@@ -18,7 +18,7 @@ class Table:
         table += "\\centering\n"
         
         if self.title:
-            table += f"\\caption*{{{self.title}}}\n"
+            table += f"\\caption{{{self.title}}}\n"
 
         table += f"\\begin{{tabular}}{{{' '.join('c' * len(self.columns))}}}\n"
 
@@ -45,11 +45,14 @@ def format_rules(df, title):
     table.add_column('Lift')
 
     for index, row in df.iterrows():
+        joined_antecedents = ', '.join(row['antecedents'])
+        joined_consequents = ', '.join(row['consequents'])
+
         table.add_row([
-            f"{row['antecedents']} $\\rightarrow$ {row['consequents']}",
-            f"{row['support']:.2f}",
-            f"{row['confidence']:.2f}",
-            f"{row['lift']:.2f}"
+            f"{{{joined_antecedents}}} $\\rightarrow$ {{{joined_consequents}}}",
+            f"{row['support']:.6f}",
+            f"{row['confidence']:.6f}",
+            f"{row['lift']:.6f}"
         ])
     
     return table
@@ -61,6 +64,20 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     rules = pd.read_csv(args.rules)
+    rules['antecedents'] = rules['antecedents'].apply(eval)
+    rules['consequents'] = rules['consequents'].apply(eval)
+
     rules = rules.sort_values(by='confidence', ascending=False)
 
-    print(format_rules(rules, 'Regras de Associação'))
+    one_to_one_rules = rules[
+        (rules['antecedents'].apply(len) == 1) &
+        (rules['consequents'].apply(len) == 1)
+    ]
+
+    any_to_candy_rules = rules[
+        rules['consequents'].apply(lambda x: len(x) == 1 and 'Doce' in str(x))
+    ]
+
+    print(format_rules(rules.head(5), 'Regras de Associação'))
+    print(format_rules(one_to_one_rules.head(5), 'Regras de Associação de 1-1'))
+    print(format_rules(any_to_candy_rules.head(5), 'Regras de Associação com Doce'))
