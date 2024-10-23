@@ -34,19 +34,21 @@ def create_rules(df, min_support=0.2, metric='confidence', min_threshold=0.0):
 
     return rules.sort_values(by=metric, ascending=False)
 
-with open('data/padaria_trab.json', 'r') as file:
-    raw_data = json.load(file)
+if __name__ == '__main__':
+    with open('data/padaria_trab.json', 'r') as file:
+        raw_data = json.load(file)
 
-    df = format_df(raw_data)
+        df = format_df(raw_data)
 
-    variations = set(column.split()[0] for column in df.columns)
+        variations = set(column.split()[0] for column in df.columns)
 
-    ungrouped_rules = create_rules(df, min_support=5 / len(df.index))
-    grouped_variation_rules = create_rules(create_grouped_df(df, variations), min_support=5 / len(df.index))
-    grouped_only_candy_rules = create_rules(create_grouped_df(df, ['Doce']), min_support=5 / len(df.index))
+        min_support = 5 / len(df.index)
 
-    
-    df.to_csv('results/df.csv')
-    ungrouped_rules.to_csv('results/ungrouped_rules.csv')
-    grouped_variation_rules.to_csv('results/grouped_variation_rules.csv')
-    grouped_only_candy_rules.to_csv('results/grouped_only_candy_rules.csv')
+        ungrouped_rules = create_rules(df, min_support=min_support)
+        grouped_variation_rules = create_rules(create_grouped_df(df, variations), min_support=min_support)
+        grouped_only_candy_rules = create_rules(create_grouped_df(df, ['Doce']), min_support=min_support)
+
+        df.to_csv('results/df.csv')
+        ungrouped_rules.to_csv('results/ungrouped_rules.csv')
+        grouped_variation_rules.to_csv('results/grouped_variation_rules.csv')
+        grouped_only_candy_rules.to_csv('results/grouped_only_candy_rules.csv')
