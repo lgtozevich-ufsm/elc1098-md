@@ -31,6 +31,8 @@ def create_grouped_df(df, prefixes):
 def create_rules(df, min_support=0.2, metric='confidence', min_threshold=0.0):
     frequent_itemsets = apriori(df, min_support=min_support, use_colnames=True)
     rules = association_rules(frequent_itemsets, metric=metric, min_threshold=min_threshold)
+    
+    rules['count'] = round(rules['support'] * len(df.index))
 
     return rules.sort_values(by=metric, ascending=False)
 

@@ -43,6 +43,8 @@ def format_rules(df, title):
     table.add_column('Suporte')
     table.add_column('Confiança')
     table.add_column('Lift')
+    table.add_column('Convicção')
+    table.add_column('Contagem')
 
     for index, row in df.iterrows():
         joined_antecedents = ', '.join(row['antecedents'])
@@ -52,7 +54,9 @@ def format_rules(df, title):
             f"{{{joined_antecedents}}} $\\rightarrow$ {{{joined_consequents}}}",
             f"{row['support']:.6f}",
             f"{row['confidence']:.6f}",
-            f"{row['lift']:.6f}"
+            f"{row['lift']:.6f}",
+            f"{row['conviction']:.6f}",
+            f"{row['count']:.6f}"
         ])
     
     return table
