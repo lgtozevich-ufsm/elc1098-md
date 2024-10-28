@@ -20,6 +20,7 @@ class Table:
         if self.title:
             table += f"\\caption{{{self.title}}}\n"
 
+        table += "\\scriptsize\n"
         table += f"\\begin{{tabular}}{{{' '.join('c' * len(self.columns))}}}\n"
 
         table += "\\toprule\n"
@@ -31,7 +32,7 @@ class Table:
 
         table += "\\bottomrule\n"
 
-        table += "\\end{tabular}\n"
+        table += "\\end{tabular}%\n"
         table += "\\end{table} \\\\\n"
 
         return table
@@ -56,7 +57,7 @@ def format_rules(df, title):
             f"{row['confidence']:.6f}",
             f"{row['lift']:.6f}",
             f"{row['conviction']:.6f}",
-            f"{row['count']:.6f}"
+            f"{row['count']}"
         ])
     
     return table
