@@ -40,12 +40,11 @@ def plot_sankey(rules):
         )
     ))
 
-    fig.update_layout(title_text="Diagrama de Sankey das 20 Regras de Associação com Maior Confiança", font_size=10)
     fig.show()
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Gerar gráfico')
-    parser.add_argument('rules', type=str, help='Caminho para o arquivo CSV das regras')
+    parser = argparse.ArgumentParser(description='Generate sankey\'s diagram')
+    parser.add_argument('rules', type=str, help='Path to the rules CSV file')
 
     args = parser.parse_args()
 
